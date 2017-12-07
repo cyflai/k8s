@@ -1,0 +1,127 @@
+---
+- hosts: all
+  tasks:
+   
+  - name: install docker.io
+    apt: 
+      name: docker.io
+      update_cache: yes
+      state: present
+
+  - name: ensure same cgroup
+    shell: |
+           cat << EOF > /etc/docker/daemon.json
+           {
+            "exec-opts": ["native.cgroupdriver=systemd"]
+           }
+           EOF
+
+  - name: install apt-transport-https
+    apt:
+      name: apt-transport-https
+      update_cache: yes
+      state: present
+
+  - name: add key
+    apt_key: 
+      url: 'https://packages.cloud.google.com/apt/doc/apt-key.gpg'
+      state: present
+
+  - apt_repository:
+      repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+    tags: abc
+
+  - name: install kubelet kubeadm kubectl
+    apt:
+      name: "{{ item }}"
+    with_items:
+      - kubelet 
+      - kubeadm 
+      - kubectl
+
+  - name: swapoff -a
+    shell: swapoff -a
+   
+  - hostname:
+      name: "{{ inventory_hostname }}"
+
+  - name: update hosts file
+    lineinfile:
+      path: /etc/hosts
+      regexp: '^.*127.0.1.1.*'
+      line: "127.0.1.1 {{ inventory_hostname }}.{{ domain }} {{ inventory_hostname }}"
+      insertafter: '^.*127.0.0.1.*'
+      state: present
+
+- hosts: "{{ groups['master'][0] }}"
+  tasks: 
+
+  - name: kubeadm init
+    shell: "kubeadm init --pod-network-cidr={{ cidr }} | grep 'kubeadm join --token'"
+    register: join_token 
+  
+  - debug:
+      msg: "{{ join_token }}"
+
+  - copy:
+      src: 'kube-flannel.yml'
+      dest: '~/kube-flannel.yml'
+
+  - file:
+      dest: ~/.kube
+      state: directory
+
+  - shell: cp /etc/kubernetes/admin.conf ~/.kube/config
+    become: true
+    become_user: root
+
+  - lineinfile:
+      path: ~/.profile
+      insertbefore: '^mesg n || true'
+      line: 'export KUBECONFIG=/etc/kubernetes/admin.conf'
+
+  - name: deploy network pod
+    shell: 'kubectl  --kubeconfig .kube/config apply -f ~/kube-flannel.yml'
+ 
+- hosts: worker
+  tasks:
+  
+  - name: join node to cluster
+    shell: "{{ hostvars[groups['master'][0]]['join_token']['stdout'] }}"
+
+- hosts: master
+  tasks: 
+
+  - copy:
+      src: 'kube-dashboard.yml'
+      dest: '~/kube-dashboard.yml'
+ 
+  - name: install dashboard
+    shell: 'kubectl --kubeconfig .kube/config apply -f ~/kube-dashboard.yml'
+  
+  - copy:
+      src: 'admin-role.yml'
+      dest: '~/admin-role.yml'
+
+  - name: create dashboard user
+    shell: 'kubectl --kubeconfig .kube/config create -f ~/admin-role.yml'
+
+  
+  - shell: "kubectl --kubeconfig .kube/config -n kube-system get secret | grep  -o -P 'admin-token-.{0,5}'"
+    register: admin_token_name
+    tags: abcde
+  
+  - shell: kubectl --kubeconfig .kube/config -n kube-system describe secret {{ admin_token_name.stdout }}
+    register: admin_token
+
+  - debug:
+      msg: "UI: http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/"
+
+  - debug: 
+      msg: dashboard token {{ admin_token.stdout }}
+
+
+
+
+
+
