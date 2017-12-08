@@ -105,20 +105,19 @@
 
   - name: create dashboard user
     shell: 'kubectl --kubeconfig .kube/config create -f ~/admin-role.yml'
-
   
   - shell: "kubectl --kubeconfig .kube/config -n kube-system get secret | grep  -o -P 'admin-token-.{0,5}'"
     register: admin_token_name
     tags: abcde
-  
-  - shell: kubectl --kubeconfig .kube/config -n kube-system describe secret {{ admin_token_name.stdout }}
+
+  - name: Retreive admin token  
+    shell: kubectl --kubeconfig .kube/config -n kube-system describe secret {{ admin_token_name.stdout }}
     register: admin_token
 
-  - debug:
-      msg: "UI: http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/"
-
   - debug: 
-      msg: dashboard token {{ admin_token.stdout }}
+      msg: | 
+          Dashboard URL http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+          dashboard token {{ admin_token.stdout }}
 
 
 

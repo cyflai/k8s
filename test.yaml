@@ -1,8 +1,0 @@
----
-- hosts: localhost
-  tasks:
-
-  - debug: 
-      msg: "{{ lookup('file', 'result.txt') | regex_findall('kubeadm join --token') }}"
-    
-
