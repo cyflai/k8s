@@ -60,9 +60,6 @@
     shell: "kubeadm init --pod-network-cidr={{ cidr }} | grep 'kubeadm join --token'"
     register: join_token 
   
-  - debug:
-      msg: "{{ join_token }}"
-
   - copy:
       src: 'kube-flannel.yml'
       dest: '~/kube-flannel.yml'
