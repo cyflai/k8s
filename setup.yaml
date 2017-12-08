@@ -53,7 +53,7 @@
       insertafter: '^.*127.0.0.1.*'
       state: present
 
-- hosts: "{{ groups['master'][0] }}"
+- hosts: master
   tasks: 
 
   - name: kubeadm init
