@@ -1,6 +1,7 @@
 [master]
-k1 ansible_host=10.15.76.139 ansible_username=root ansible_password='Zaq!2wsX'
+k8s-master ansible_host=10.15.76.220 ansible_username=root ansible_password='Zaq!2wsX'
 
 [worker]
-k2 ansible_host=10.15.76.135 ansible_username=root ansible_password='Zaq!2wsX'
-k3 ansible_host=10.15.76.143 ansible_username=root ansible_password='Zaq!2wsX'
+k8s-node1 ansible_host=10.15.76.221 ansible_username=root ansible_password='Zaq!2wsX'
+k8s-node2 ansible_host=10.15.76.222 ansible_username=root ansible_password='Zaq!2wsX'
+k8s-node3  ansible_host=10.15.76.223 ansible_username=root ansible_password='Zaq!2wsX'
