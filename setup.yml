@@ -21,12 +21,16 @@
       name: apt-transport-https
       update_cache: yes
       state: present
+  
+  - apt_repository:
+    repo: ppa:gluster/glusterfs-4.1
+    state: present
 
   - name: add key
     apt_key: 
       url: 'https://packages.cloud.google.com/apt/doc/apt-key.gpg'
       state: present
-      
+
   - name: add key key
     shell: 'curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -'
 
@@ -41,6 +45,7 @@
       - kubelet 
       - kubeadm 
       - kubectl
+      - glusterfs-client
 
   - name: swapoff -a
     shell: swapoff -a
