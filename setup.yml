@@ -26,6 +26,9 @@
     apt_key: 
       url: 'https://packages.cloud.google.com/apt/doc/apt-key.gpg'
       state: present
+      
+  - name: add key key
+    shell: 'curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -'
 
   - apt_repository:
       repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
