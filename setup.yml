@@ -22,7 +22,8 @@
       update_cache: yes
       state: present
   
-  - apt_repository:
+  - name: add-apt-repository ppa:gluster/glusterfs-4.1
+    apt_repository:
     repo: ppa:gluster/glusterfs-4.1
     state: present
 
