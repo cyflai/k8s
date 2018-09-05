@@ -57,9 +57,9 @@
   tasks:
   
   - name: Stop service kubelet, if running
-  service:
-    name: kubelet
-    state: stopped
+    service:
+      name: kubelet
+      state: stopped
 
   - name: kubeadm init
     shell: "kubeadm init --pod-network-cidr={{ cidr }} | grep 'kubeadm join --token'"
