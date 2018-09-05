@@ -24,8 +24,8 @@
   
   - name: add-apt-repository ppa:gluster/glusterfs-4.1
     apt_repository:
-    repo: ppa:gluster/glusterfs-4.1
-    state: present
+      repo: ppa:gluster/glusterfs-4.1
+      state: present
 
   - name: add key
     apt_key: 
