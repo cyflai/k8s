@@ -64,6 +64,7 @@
   - name: kubeadm init
     shell: "kubeadm init --pod-network-cidr={{ cidr }} | grep 'kubeadm join'"
     register: join_token 
+    #kubeadm join 10.15.76.83:6443 --token 5z6x1o.328f81fpb33fn3du --discovery-token-ca-cert-hash sha256:7ea486e2686d7ea9729f8478ac2c8933db1b8ba20d6b013f3dd74a8666dbbb55
   
   - copy:
       src: 'kube-flannel.yml'
