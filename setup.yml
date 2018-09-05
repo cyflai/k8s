@@ -90,8 +90,7 @@
   tasks:
   
   - name: join node to cluster
-    shell: "{{ join_token.stdout }}"
-    #shell: "{{ hostvars[groups['master'][0]]['join_token']['stdout'] }}"
+    shell: "{{ hostvars[groups['master'][0]]['join_token']['stdout'] }}"
 
 - hosts: master
   tasks: 
