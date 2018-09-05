@@ -121,7 +121,7 @@
           
   - debug: 
       msg: | 
-           scp root@{{ hostvars[groups['master'][0]][ansible_default_ipv4][address] }}:/etc/kubernetes/admin.config .
+           scp root@{{ hostvars[groups['master'][0]][address] }}:/etc/kubernetes/admin.config .
           
 ### pro configuration
 ### cp /etc/kubernetes/admin.config  ## to kubctl client machine for remote access
