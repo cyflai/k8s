@@ -95,12 +95,13 @@
 - hosts: master
   tasks: 
 
-  - copy:
-      src: 'kube-dashboard.yml'
-      dest: '~/kube-dashboard.yml'
+  #- copy:
+  #    src: 'kube-dashboard.yml'
+  #    dest: '~/kube-dashboard.yml'
  
   - name: install dashboard
-    shell: 'kubectl --kubeconfig .kube/config apply -f ~/kube-dashboard.yml'
+    shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+    #shell: 'kubectl --kubeconfig .kube/config apply -f ~/kube-dashboard.yml'
   
   - copy:
       src: 'admin-role.yml'
