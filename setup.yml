@@ -54,7 +54,12 @@
       state: present
 
 - hosts: master
-  tasks: 
+  tasks:
+  
+  - name: Stop service kubelet, if running
+  service:
+    name: kubelet
+    state: stopped
 
   - name: kubeadm init
     shell: "kubeadm init --pod-network-cidr={{ cidr }} | grep 'kubeadm join --token'"
@@ -115,3 +120,10 @@
       msg: | 
           Dashboard URL http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
           dashboard token {{ admin_token.stdout }}
+          
+          
+### pro configuration
+### cp /etc/kubernetes/admin.config  ## to kubctl client machine for remote access
+
+
+
