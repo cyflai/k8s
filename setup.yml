@@ -50,15 +50,17 @@
 
   - name: swapoff -a
     shell: swapoff -a
+    
+  - replace:
+      dest: /var/lib/kubelet/kubeadm-flags.env
+      regexp: 'cgroupfs'
+      replace: 'systemd'
 
-  - name: update hosts file
-    lineinfile:
-      dest: /etc/hosts
-      regexp: '^(.*)cgroupfs(.*)$'
-      line: line='\1systemd\2'
-      backrefs=yes
-
-
+  - replace:
+      dest: /etc/fstab
+      regexp: '/dev/mapper/ubuntu--vg-swap_1'
+      replace: '#/dev/mapper/ubuntu--vg-swap_1'     
+            
   - hostname:
       name: "{{ inventory_hostname }}"
 
