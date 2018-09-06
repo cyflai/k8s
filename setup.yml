@@ -112,6 +112,11 @@
   - name: join node to cluster
     shell: "{{ hostvars[groups['master'][0]]['join_token']['stdout'] }}"
 
+  - replace:
+      dest: /var/lib/kubelet/kubeadm-flags.env
+      regexp: 'cgroupfs'
+      replace: 'systemd'
+
 - hosts: master
   tasks: 
 
