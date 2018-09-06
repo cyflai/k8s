@@ -50,7 +50,15 @@
 
   - name: swapoff -a
     shell: swapoff -a
-   
+
+  - name: update hosts file
+    lineinfile:
+      dest: /etc/hosts
+      regexp: '^(.*)cgroupfs(.*)$'
+      line: line='\1systemd\2'
+      backrefs=yes
+
+
   - hostname:
       name: "{{ inventory_hostname }}"
 
